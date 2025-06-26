@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardTitle } from "@/components/ui/card"
 import { TrendingUp } from "lucide-react"
 
-import type {CRMChartDataItem, CrmMetricData, LeadMetricData, OpportunityMetricData} from "../../types/crm-chart-types"
+import type {CRMChartDataItem, CrmMetricData, LeadMetricData, OpportunityMetricData} from "./crm-chart-types"
 
 interface CRMChartComponentProps {
   data: CRMChartDataItem[]

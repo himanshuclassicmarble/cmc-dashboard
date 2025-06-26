@@ -1,4 +1,4 @@
-import { CRMChartDataItem } from "../types/crm-chart-types"
+import { CRMChartDataItem } from "./crm-chart-types"
 
 export const sampleCRMData: CRMChartDataItem[] = [
   { day: "00-07", leads: { leadQuantity: 25, leadNumbers: 2.5 }, opportunities: { oppQuantity: 8, oppNumbers: 1.2 } },

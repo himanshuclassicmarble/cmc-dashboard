@@ -10,7 +10,7 @@ import { sampleHoldSoldData } from "./data/hold-sold-data";
 import FilterHeader from "@/app/card-test-v5/components/FilterHeader";
 import { CRMCard } from "./components/crm-card";
 
-const CardTestV6: React.FC = () => {
+const CardTestV7: React.FC = () => {
     const crmTotalLeads = { leadQuantity: 270, leadNumbers: 7400 };
     const crmTotalOpps = { oppQuantity: 300, oppNumbers: 299 };
     const holdSoldTotalHeld = { holdQuantity: 90, holdNumbers: 90 };
@@ -107,4 +107,4 @@ const CardTestV6: React.FC = () => {
     );
 };
 
-export default CardTestV6;
+export default CardTestV7;

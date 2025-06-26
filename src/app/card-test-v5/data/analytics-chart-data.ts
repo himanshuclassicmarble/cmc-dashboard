@@ -2,75 +2,75 @@ import { AnalyticsDataPoint } from "../types/analytics-chart-types";
 
 export const AnalyticsChartData:AnalyticsDataPoint[]= [
   {
-    month: "Apr",
-    currentYear: { value: 186, quantity: 50 },
-    previousYear: { value: 165, quantity: 45 },
-    target: { value: 400, quantity: 100 },
+    month: 'Apr',
+    currentYear: { value: 0.48, quantity: 13 },
+    previousYear: { value: 0.48, quantity: 15.4 },
+    target: { value: 1.67, quantity: 37 }
   },
   {
-    month: "May",
-    currentYear: { value: 305, quantity: 70 },
-    previousYear: { value: 280, quantity: 65 },
-    target: { value: 400, quantity: 100 },
+    month: 'May',
+    currentYear: { value: 0.79, quantity: 20.7 },
+    previousYear: { value: 0.82, quantity: 21.9 },
+    target: { value: 1.67, quantity: 37 }
   },
   {
-    month: "Jun",
-    currentYear: { value: 200, quantity: 60 },
-    previousYear: { value: 220, quantity: 55 },
-    target: { value: 400, quantity: 100 },
+    month: 'Jun',
+    currentYear: { value: 0.61, quantity: 21.7 },
+    previousYear: { value: 0.85, quantity: 25.4 },
+    target: { value: 1.67, quantity: 37 }
   },
   {
-    month: "Jul",
-    currentYear: { value: 410, quantity: 80 },
-    previousYear: { value: 190, quantity: 50 },
-    target: { value: 400, quantity: 100 },
-  },
-  {
-    month: "Aug",
+    month: 'Jul',
     currentYear: { value: 0, quantity: 0 },
-    previousYear: { value: 195, quantity: 45 },
-    target: { value: 400, quantity: 100 },
+    previousYear: { value: 0.41, quantity: 7.2 },
+    target: { value: 2.08, quantity: 46.2 }
   },
   {
-    month: "Sep",
+    month: 'Aug',
     currentYear: { value: 0, quantity: 0 },
-    previousYear: { value: 200, quantity: 50 },
-    target: { value: 400, quantity: 100 },
+    previousYear: { value: 1.13, quantity: 26.3 },
+    target: { value: 2.08, quantity: 46.2 }
   },
   {
-    month: "Oct",
+    month: 'Sep',
     currentYear: { value: 0, quantity: 0 },
-    previousYear: { value: 175, quantity: 40 },
-    target: { value: 400, quantity: 100 },
+    previousYear: { value: 0.62, quantity: 23 },
+    target: { value: 2.08, quantity: 46.2 }
   },
   {
-    month: "Nov",
+    month: 'Oct',
     currentYear: { value: 0, quantity: 0 },
-    previousYear: { value: 240, quantity: 60 },
-    target: { value: 400, quantity: 100 },
+    previousYear: { value: 0.4, quantity: 9.6 },
+    target: { value: 2.08, quantity: 46.2 }
   },
   {
-    month: "Dec",
+    month: 'Nov',
     currentYear: { value: 0, quantity: 0 },
-    previousYear: { value: 285, quantity: 70 },
-    target: { value: 400, quantity: 100 },
+    previousYear: { value: 0.37, quantity: 9.2 },
+    target: { value: 2.08, quantity: 46.2 }
   },
   {
-    month: "Jan",
+    month: 'Dec',
     currentYear: { value: 0, quantity: 0 },
-    previousYear: { value: 230, quantity: 55 },
-    target: { value: 400, quantity: 100 },
+    previousYear: { value: 1.43, quantity: 25.9 },
+    target: { value: 2.08, quantity: 46.2 }
   },
   {
-    month: "Feb",
+    month: 'Jan',
     currentYear: { value: 0, quantity: 0 },
-    previousYear: { value: 170, quantity: 40 },
-    target: { value: 400, quantity: 100 },
+    previousYear: { value: 1.05, quantity: 28.2 },
+    target: { value: 2.5, quantity: 55.4 }
   },
   {
-    month: "Mar",
+    month: 'Feb',
     currentYear: { value: 0, quantity: 0 },
-    previousYear: { value: 210, quantity: 50 },
-    target: { value: 400, quantity: 100 },
+    previousYear: { value: 0.76, quantity: 23.1 },
+    target: { value: 2.5, quantity: 55.4 }
   },
+  {
+    month: 'Mar',
+    currentYear: { value: 0, quantity: 0 },
+    previousYear: { value: 2.47, quantity: 62.3 },
+    target: { value: 2.5, quantity: 55.4 }
+  }
 ];

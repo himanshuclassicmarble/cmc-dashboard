@@ -123,7 +123,6 @@ const useResponsiveFontSize = () => {
 }
 
 // Chart component
-// Chart component
 const Chart: React.FC<{ data: ChartDataItem[] }> = ({ data }) => {
     const fontSize = useResponsiveFontSize();
     
@@ -220,7 +219,6 @@ export const HoldSoldChart: React.FC<HoldSoldChartProps> = ({
     totalHeld, 
     totalSold, 
     chartData,
-    subtitle
 }) => {
     const sanitizedData = useMemo(() => {
         if (!chartData || !Array.isArray(chartData)) return [];
@@ -234,11 +232,9 @@ export const HoldSoldChart: React.FC<HoldSoldChartProps> = ({
     const sanitizedTotals = useMemo(() => ({
         hold: {
             holdQuantity: Number(totalHeld?.holdQuantity) || 0,
-            holdNumbers: Number(totalHeld?.holdNumbers) || 0,
         },
         sold: {
             soldQuantity: Number(totalSold?.soldQuantity) || 0,
-            soldNumbers: Number(totalSold?.soldNumbers) || 0,
         },
     }), [totalHeld, totalSold]);
 
@@ -255,7 +251,6 @@ export const HoldSoldChart: React.FC<HoldSoldChartProps> = ({
                                         <Package className="h-4 w-4 text-primary" />
                                         Hold/Sold Data
                                     </CardTitle>
-                                    {subtitle && <span className="text-[10px] text-muted-foreground">{subtitle}</span>}
                                 </div>
                             </div>
                         </div>
@@ -279,7 +274,6 @@ export const HoldSoldChart: React.FC<HoldSoldChartProps> = ({
                                     <TrendingUp className="h-4 w-4 text-primary" />
                                     Hold/sold Data
                                 </CardTitle>
-                                {subtitle && <span className="text-[10px] text-muted-foreground">{subtitle}</span>}
                             </div>
                         </div>
                     </div>
@@ -290,30 +284,6 @@ export const HoldSoldChart: React.FC<HoldSoldChartProps> = ({
                     <div className="flex flex-col gap-1.5">
                         {/* Stock Summary Cards - Takes 2 columns */}
                         <div className="flex flex-row md:flex-col lg:flex-row gap-1.5">
-                            {/* Hold Stock Card */}
-                            <div className="w-full space-y-2 border border-border rounded-lg px-2 py-2">
-                                <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide flex items-center gap-1">
-                                    <div className="w-2 h-2 rounded-full bg-chart-2" />
-                                    Hold Stock
-                                </div>
-                                <div className="grid grid-cols-2 gap-2">
-                                    <div className="space-y-0.5">
-                                        <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">Numbers</div>
-                                        <div className="text-base lg:text-lg font-bold text-foreground">
-                                            {formatValue(sanitizedTotals.hold.holdNumbers)}
-                                        </div>
-                                    </div>
-                                    <div className="space-y-0.5">
-                                        <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">
-                                            Quantity
-                                        </div>
-                                        <div className="text-base lg:text-lg font-bold text-foreground">
-                                            {formatValue(sanitizedTotals.hold.holdQuantity)}
-                                            <span className="text-xs font-medium text-muted-foreground ml-1">Sq.ft</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
                             {/* Sold Stock Card */}
                             <div className="w-full space-y-2 border border-border rounded-lg px-2 py-2">
@@ -321,21 +291,29 @@ export const HoldSoldChart: React.FC<HoldSoldChartProps> = ({
                                     <div className="w-2 h-2 rounded-full bg-chart-1" />
                                     Sold Stock
                                 </div>
-                                <div className="grid grid-cols-2 gap-2">
-                                    <div className="space-y-0.5">
-                                        <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">Numbers</div>
-                                        <div className="text-base lg:text-lg font-bold text-foreground">
-                                            {formatValue(sanitizedTotals.sold.soldNumbers)}
-                                        </div>
+                                <div className="space-y-0.5">
+                                    <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">
+                                        Quantity
                                     </div>
-                                    <div className="space-y-0.5">
-                                        <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">
-                                            Quantity
-                                        </div>
-                                        <div className="text-base lg:text-lg font-bold text-foreground">
-                                            {formatValue(sanitizedTotals.sold.soldQuantity)}
-                                            <span className="text-xs font-medium text-muted-foreground ml-1">Sq.ft</span>
-                                        </div>
+                                    <div className="text-base lg:text-lg font-bold text-foreground">
+                                        {formatValue(sanitizedTotals.sold.soldQuantity)}
+                                        <span className="text-xs font-medium text-muted-foreground ml-1">Sq.ft</span>
+                                    </div>
+                                </div>
+                            </div>
+                            {/* Hold Stock Card */}
+                            <div className="w-full space-y-2 border border-border rounded-lg px-2 py-2">
+                                <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide flex items-center gap-1">
+                                    <div className="w-2 h-2 rounded-full bg-chart-2" />
+                                    Hold Stock
+                                </div>
+                                <div className="space-y-0.5">
+                                    <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">
+                                        Quantity
+                                    </div>
+                                    <div className="text-base lg:text-lg font-bold text-foreground">
+                                        {formatValue(sanitizedTotals.hold.holdQuantity)}
+                                        <span className="text-xs font-medium text-muted-foreground ml-1">Sq.ft</span>
                                     </div>
                                 </div>
                             </div>

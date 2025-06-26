@@ -43,6 +43,7 @@ interface CustomTooltipProps {
     name?: string;
   }>;
   label?: string;
+  metric?: "value" | "quantity";
 }
 
 // ===================== CONSTANTS =====================
@@ -76,18 +77,28 @@ const CHART_MARGINS = {
 
 // ===================== UTILITIES =====================
 
-const formatValue = (value: number, decimals = 0): string =>
-  value.toLocaleString("en-IN", {
-    minimumFractionDigits: decimals,
+// function for the formatting the dat aof the chart
+const formatValue = (value: number, metric: "value" | "quantity" = "value"): string => {
+  const decimals = metric === "quantity" ? 1 : 2;
+  
+  // checks if decimal is present if true then add decimal or no decimal
+  const hasDecimals = value % 1 !== 0;
+  const finalDecimals = hasDecimals ? decimals : 0;
+  
+  return value.toLocaleString("en-IN", {
+    minimumFractionDigits: finalDecimals,
     maximumFractionDigits: decimals,
   });
+};
 
+// Screensize manipulation for the Slider to work properly.
 const getScreenSize = (width: number) => {
   if (width < SCREEN_BREAKPOINTS.MOBILE) return 'mobile';
   if (width < SCREEN_BREAKPOINTS.TABLET) return 'tablet';
   return 'desktop';
 };
 
+// font size change in the chart
 const getFontSize = (screenSize: string) => {
   switch (screenSize) {
     case 'mobile': return 8;
@@ -96,6 +107,8 @@ const getFontSize = (screenSize: string) => {
   }
 };
 
+
+// how many data to visible at a time on a tab or phone
 const getVisibleDataCount = (screenSize: string) => {
   switch (screenSize) {
     case 'mobile': return 4;
@@ -105,7 +118,7 @@ const getVisibleDataCount = (screenSize: string) => {
 };
 
 // ===================== HOOKS =====================
-
+// screensize checker 
 const useScreenSize = () => {
   const [screenSize, setScreenSize] = useState('desktop');
 
@@ -113,7 +126,7 @@ const useScreenSize = () => {
     if (typeof window === "undefined") return;
     setScreenSize(getScreenSize(window.innerWidth));
   }, []);
-
+// component updater according to the size of the device
   useEffect(() => {
     updateScreenSize();
     window.addEventListener("resize", updateScreenSize);
@@ -149,7 +162,7 @@ const useDataTransform = (data: AnalyticsDataPoint[]) => {
 
 // ===================== COMPONENTS =====================
 
-const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
+const CustomTooltip = ({ active, payload, label, metric = "value" }: CustomTooltipProps) => {
   if (!active || !payload?.length) return null;
 
   return (
@@ -179,7 +192,7 @@ const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
                 </span>
               </div>
               <span className="text-[10px] font-semibold tabular-nums">
-                {formatValue(value)}
+                {formatValue(value, metric)}
               </span>
             </div>
           );
@@ -205,9 +218,8 @@ const ChartLegend = () => (
   </div>
 );
 
-const Chart = ({ data, screenSize }: { data: ChartDataPoint[]; screenSize: string }) => {
+const Chart = ({ data, screenSize, metric }: { data: ChartDataPoint[]; screenSize: string; metric: "value" | "quantity" }) => {
   const fontSize = getFontSize(screenSize);
-  const isMobile = screenSize === 'mobile';
 
   if (!data?.length) {
     return (
@@ -217,14 +229,16 @@ const Chart = ({ data, screenSize }: { data: ChartDataPoint[]; screenSize: strin
     );
   }
 
+  const formatValueForMetric = (value: number) => formatValue(value, metric);
+
   return (
     <ResponsiveContainer width="100%" height="100%">
       <ChartContainer config={CHART_CONFIG} className="h-[300px] w-full">
         <ComposedChart
           data={data}
           margin={CHART_MARGINS}
-          barCategoryGap="20%"
-          barGap={3}
+          barCategoryGap="5%"
+          barGap={2}
         >
           <CartesianGrid 
             strokeDasharray="3 3" 
@@ -254,12 +268,12 @@ const Chart = ({ data, screenSize }: { data: ChartDataPoint[]; screenSize: strin
               fontWeight: 500,
               fontSize: fontSize - 1,
             }}
-            tickFormatter={(value) => formatValue(value, 0)}
+            tickFormatter={formatValueForMetric}
           />
 
           <ChartTooltip 
             cursor={{ fill: "hsl(var(--muted)/20)" }} 
-            content={<CustomTooltip />} 
+            content={<CustomTooltip metric={metric} />} 
           />
 
           <Bar
@@ -274,7 +288,7 @@ const Chart = ({ data, screenSize }: { data: ChartDataPoint[]; screenSize: strin
               offset={8}
               className="fill-foreground font-medium"
               fontSize={fontSize}
-              formatter={formatValue}
+              formatter={formatValueForMetric}
             />
           </Bar>
 
@@ -290,7 +304,7 @@ const Chart = ({ data, screenSize }: { data: ChartDataPoint[]; screenSize: strin
               offset={8}
               className="fill-foreground font-medium"
               fontSize={fontSize}
-              formatter={formatValue}
+              formatter={formatValueForMetric}
             />
           </Bar>
 
@@ -319,7 +333,7 @@ const Chart = ({ data, screenSize }: { data: ChartDataPoint[]; screenSize: strin
               fontSize={fontSize}
               fontWeight="600"
               offset={12}
-              formatter={formatValue}
+              formatter={formatValueForMetric}
             />
           </Line>
         </ComposedChart>
@@ -440,11 +454,11 @@ export default function AnalyticsChart({ data }: AnalyticsChartProps) {
 
           {/* Chart Content */}
           <TabsContent value="value" className="mt-0">
-            <Chart data={visibleData} screenSize={screenSize} />
+            <Chart data={visibleData} screenSize={screenSize} metric="value" />
           </TabsContent>
 
           <TabsContent value="quantity" className="mt-0">
-            <Chart data={visibleData} screenSize={screenSize} />
+            <Chart data={visibleData} screenSize={screenSize} metric="quantity" />
           </TabsContent>
         </Tabs>
 
