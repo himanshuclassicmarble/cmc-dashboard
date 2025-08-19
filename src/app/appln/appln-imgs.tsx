@@ -40,7 +40,7 @@ const ApplnImg = ({
   }
 
   return (
-    <div className="w-full overflow-hidden p-0">
+    <div className="w-full rounded-xl md:rounded-lg overflow-hidden p-0">
       <Carousel
         opts={{
           align: "start",
@@ -60,7 +60,7 @@ const ApplnImg = ({
                   qualityGroup={item.qualityGroup ?? ""}
                   appln={item.appln ?? ""}
                   imageName={item.filename ?? ""}
-                  className="h-[calc(100vh-8rem)] w-full"
+                  className="md:h-[calc(100vh-8rem)] h-[600px] w-full"
                 />
               </CarouselItem>
             ))

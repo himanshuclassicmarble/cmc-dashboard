@@ -67,28 +67,43 @@ const Qualities = ({ qualities }: { qualities: QualitiesType[] | null }) => {
     <div className="md:h-[calc(100vh-9rem)]">
       <ScrollArea className="group h-full w-full">
         <div
-          className="p-1 flex md:flex-col sm:flex-row md:space-y-3 sm:space-x-1"
+          className="p-2 flex flex-row md:flex-col gap-2 md:min-h-0"
           ref={scrollAreaRef}
         >
           {displayedQualities.map((item, index) => (
             <div
               key={`${item.color}-${item.qualityGroup}-${index}`}
-              data-quality-group={item.qualityGroup} // Add data attribute for easier querying
+              data-quality-group={item.qualityGroup}
+              className="flex-shrink-0 w-40 md:w-full"
             >
               <QualityCard item={item} />
             </div>
           ))}
+
           {hasMore && (
-            <div className="flex justify-center pt-4">
-              <Button onClick={loadMore} variant="outline">
+            <div className="flex justify-center items-center py-6 flex-shrink-0 w-32 md:w-full">
+              <Button
+                onClick={loadMore}
+                variant="outline"
+                size="sm"
+                className="min-w-[100px] bg-background hover:bg-accent hover:text-accent-foreground border-border transition-colors text-xs md:text-sm"
+              >
                 Load More
               </Button>
             </div>
           )}
         </div>
+
+        {/* Horizontal scrollbar for mobile */}
         <ScrollBar
           orientation="horizontal"
-          className="h-1 group-hover:h-3 w-32 bg-foreground/50 rounded-full cursor-pointer absolute mx-auto p-0 transition-all duration-150"
+          className="h-1 group-hover:h-2 bg-border/50 rounded-full transition-all duration-200 md:hidden"
+        />
+
+        {/* Vertical scrollbar for desktop */}
+        <ScrollBar
+          orientation="vertical"
+          className="w-1 group-hover:w-2 bg-border/50 rounded-full transition-all duration-200 hidden md:block"
         />
       </ScrollArea>
     </div>

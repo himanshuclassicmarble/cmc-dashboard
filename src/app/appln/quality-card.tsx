@@ -31,7 +31,7 @@ const QualityCard = ({ item, className }: QualityCardProps) => {
   return (
     <Card
       className={cn(
-        "relative p-0 m-1 h-20 min-w-32 cursor-pointer overflow-hidden rounded-md border transition-all duration-200",
+        "relative p-0 m-1 h-20 min-w-32 cursor-pointer overflow-hidden rounded-xl md:rounded-lg border transition-all duration-200",
         isSelected
           ? "ring-2 ring-offset-1 ring-primary"
           : "border-muted hover:border-primary",

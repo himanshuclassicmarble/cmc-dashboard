@@ -33,7 +33,7 @@ export function FilterSelect({ filterOptions }: FilterSelectProps) {
 
   return (
     <Select value={selectedAppln} onValueChange={handleChange}>
-      <SelectTrigger className="p-2 w-full text-xs">
+      <SelectTrigger className="p-2 w-full rounded-xl text-xs">
         <SelectValue placeholder="All" />
       </SelectTrigger>
       <SelectContent>

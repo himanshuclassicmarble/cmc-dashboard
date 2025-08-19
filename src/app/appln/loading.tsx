@@ -14,15 +14,18 @@ export default function Loading() {
             {/* Quality Search and Filter Select */}
             <div className="space-y-2">
               {/* QualitySearch Placeholder */}
-              <Skeleton className="h-10 w-full rounded-md" />
+              <Skeleton className="h-10 w-full rounded-xl md:rounded-lg" />
               {/* FilterSelect Placeholder */}
-              <Skeleton className="h-10 w-full rounded-md" />
+              <Skeleton className="h-10 w-full rounded-xl md:rounded-lg" />
             </div>
 
             {/* Qualities Section Placeholder */}
             <div className="flex-1 space-y-2 overflow-y-auto">
               {[...Array(10)].map((_, index) => (
-                <Skeleton key={index} className="h-20 w-full rounded-md" />
+                <Skeleton
+                  key={index}
+                  className="h-20 w-full rounded-xl md:rounded-lg"
+                />
               ))}
             </div>
           </div>
@@ -35,7 +38,7 @@ export default function Loading() {
                 {[...Array(10)].map((_, index) => (
                   <Skeleton
                     key={index}
-                    className="h-14 w-32 shrink-0 rounded-md"
+                    className="h-14 w-32 shrink-0 rounded-xl md:rounded-lg"
                   />
                 ))}
               </div>
@@ -44,7 +47,7 @@ export default function Loading() {
             {/* Application Images Section Placeholder */}
             <div className="flex-1 p-2">
               <div className="relative h-full w-full">
-                <Skeleton className="h-[calc(100vh-8rem)] w-full rounded-md" />
+                <Skeleton className="h-[calc(100vh-8rem)] w-full rounded-xl md:rounded-lg" />
               </div>
             </div>
           </div>
@@ -56,15 +59,15 @@ export default function Loading() {
             {/* Filter Controls */}
             <div className="bg-card rounded-lg border shadow-sm space-y-2 p-2">
               {/* QualitySearch Placeholder */}
-              <Skeleton className="h-10 w-full rounded-md" />
+              <Skeleton className="h-10 w-full rounded-xl md:rounded-lg" />
               {/* FilterSelect Placeholder */}
-              <Skeleton className="h-10 w-full rounded-md" />
+              <Skeleton className="h-10 w-full rounded-xl md:rounded-lg" />
               {/* Colors Placeholder */}
               <div className="flex w-full space-x-2 overflow-hidden">
                 {[...Array(5)].map((_, index) => (
                   <Skeleton
                     key={index}
-                    className="h-14 w-32 shrink-0 rounded-md"
+                    className="h-14 w-32 shrink-0 rounded-xl md:rounded-lg"
                   />
                 ))}
               </div>

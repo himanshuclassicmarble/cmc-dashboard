@@ -32,7 +32,7 @@ const Colors = ({ colors }: { colors: ColorType[] | null }) => {
   return (
     <div className="w-full">
       {colors && colors.length > 0 ? (
-        <ScrollArea className="group w-full whitespace-nowrap rounded-md p-0">
+        <ScrollArea className="group w-full whitespace-nowrap  p-0">
           <div className="flex w-max space-x-2" ref={scrollAreaRef}>
             {colors.map((item, index) => (
               <div
