@@ -1,37 +1,71 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import LGDataCard from "./components/q2lgdata";
-import { Q2lgData, Q2YlgData } from "./lg-data";
-import ZoneSaleComponent from "./components/zone-sale-card";
-import ColorCard from "../appln/color-card";
-import ColorTop10 from "./components/color-top-10";
-import CustomerTop15 from "./components/customer-top-15";
-import QualityTop15 from "./components/quality-top-15";
+import { allQuartorData, Q2YlgData } from "./components/quartors/data";
+import QuartorCard from "./components/quartors/quartor-card";
+import QuarterTable from "./components/quartors/quartor-table";
+import { topColors } from "./components/top-colors/data";
+import TopColors from "./components/top-colors/top-colors";
+import { topCustomers } from "./components/top-customers/data";
+import TopCustomers from "./components/top-customers/top-customers";
+import { topQualities } from "./components/top-qualities/data";
+import TopQualities from "./components/top-qualities/top-qualities";
+import { zoneData } from "./components/zone-table/data";
+import ZoneSaleCard from "./components/zone-table/zone-sale-card";
 
 const CRMRoute = () => {
   return (
-    <div className="p-2 space-y-2">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-2">
-        <div className="lg:col-span-2">
-          <LGDataCard lgData={Q2lgData} />
+    <div>
+      {/* Desktop UI: Visible on lg (≥1024px) */}
+      <div className="hidden lg:grid lg:grid-cols-10 gap-2 p-2">
+        <div className="col-span-2 flex flex-col gap-2">
+          <QuartorCard quartorData={Q2YlgData} />
+          <QuarterTable quartorToYear={allQuartorData} />
         </div>
-        <div className="lg:col-span-2">
-          <LGDataCard lgData={Q2YlgData} />
+        <div className="col-span-3 flex flex-col gap-2">
+          <ZoneSaleCard zoneData={zoneData} />
+          <TopColors colors={topColors} />
         </div>
-
-        <div className="lg:col-span-3">
-          <ZoneSaleComponent />
+        <div className="col-span-5 flex gap-2">
+          <div className="w-full">
+            <TopCustomers customers={topCustomers} />
+          </div>
+          <div className="w-full">
+            <TopQualities qualities={topQualities} />
+          </div>
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-2">
-        <div className="lg:col-span-2">
-          <ColorTop10 />
+
+      {/* Tablet UI: Visible on md (≥768px and <1024px) */}
+      <div className="hidden md:block lg:hidden">
+        <div className="flex gap-2 p-2">
+          {/* Quartor Block - 1/4 width */}
+          <div className="w-1/4 flex flex-col gap-2">
+            <QuartorCard quartorData={Q2YlgData} />
+            <QuarterTable quartorToYear={allQuartorData} />
+          </div>
+          {/* Zone + Color Block - 3/4 width */}
+          <div className="w-3/4 flex flex-col gap-2">
+            <ZoneSaleCard zoneData={zoneData} />
+            <TopColors colors={topColors} />
+          </div>
         </div>
-        <div className="lg:col-span-2">
-          <CustomerTop15 />
+        {/* Customers + Qualities */}
+        <div className="flex flex-col md:flex-row gap-2 p-2">
+          <div className="w-full">
+            <TopCustomers customers={topCustomers} />
+          </div>
+          <div className="w-full">
+            <TopQualities qualities={topQualities} />
+          </div>
         </div>
-        <div className="lg:col-span-2">
-          <QualityTop15 />
-        </div>
+      </div>
+
+      {/* Mobile UI: Visible on sm (<768px) */}
+      <div className="md:hidden grid gap-2 p-2">
+        <QuartorCard quartorData={Q2YlgData} />
+        <QuarterTable quartorToYear={allQuartorData} />
+        <ZoneSaleCard zoneData={zoneData} />
+        <TopColors colors={topColors} />
+        <TopCustomers customers={topCustomers} />
+        <TopQualities qualities={topQualities} />
       </div>
     </div>
   );

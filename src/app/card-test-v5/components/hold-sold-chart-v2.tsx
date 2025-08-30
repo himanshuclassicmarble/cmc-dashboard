@@ -1,5 +1,4 @@
 "use client";
-
 import type React from "react";
 import { useState, useEffect, useMemo } from "react";
 import {
@@ -22,7 +21,6 @@ import type {
   ChartDataItem,
   HoldSoldChartProps,
 } from "../types/hold-sold-types";
-
 interface TooltipProps {
   active?: boolean;
   payload?: Array<{
@@ -33,7 +31,6 @@ interface TooltipProps {
   }>;
   label?: string;
 }
-
 // Constants
 const CHART_CONFIG = {
   soldStock: {
@@ -48,30 +45,24 @@ const CHART_CONFIG = {
     color: "var(--foreground)",
   },
 } satisfies ChartConfig;
-
 const CHART_MARGINS = {
   left: 0,
-  top: 0,
-  right: 25,
-  bottom: 20,
+  top: 15,
+  right: 0,
+  bottom: 0, // Reduced bottom margin
 };
-
 // Utility functions
 const formatValue = (value: number, decimals = 2): string =>
   value.toLocaleString("en-IN", {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
   });
-
 const calculateResponsiveFontSize = (windowWidth: number): number =>
   Math.min(8, Math.max(6, windowWidth / 120));
-
 // Custom components
 const CustomTooltip: React.FC<TooltipProps> = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
-
   const data = payload[0].payload;
-
   return (
     <div className="rounded-lg border bg-background p-2 shadow-lg min-w-[150px]">
       <div className="flex items-center gap-1">
@@ -119,73 +110,54 @@ const CustomTooltip: React.FC<TooltipProps> = ({ active, payload, label }) => {
     </div>
   );
 };
-
 const EmptyState: React.FC<{ message: string }> = ({ message }) => (
   <div className="w-full h-full flex items-center justify-center">
     <p className="text-sm text-muted-foreground">{message}</p>
   </div>
 );
-
 // Custom hook for responsive font size
 const useResponsiveFontSize = () => {
   const [fontSize, setFontSize] = useState(7);
-
   useEffect(() => {
     const updateFontSize = () => {
       if (typeof window !== "undefined") {
         setFontSize(calculateResponsiveFontSize(window.innerWidth));
       }
     };
-
     updateFontSize();
     window.addEventListener("resize", updateFontSize);
     return () => window.removeEventListener("resize", updateFontSize);
   }, []);
-
   return fontSize;
 };
-
 // Chart component
 const Chart: React.FC<{ data: ChartDataItem[] }> = ({ data }) => {
   const fontSize = useResponsiveFontSize();
-
-  const chartMetrics = useMemo(() => {
-    if (!data.length) return { maxValue: 0, minValueForInsideLabel: 0 };
-
-    const maxValue = Math.max(...data.map((item) => item.totStock));
-    return {
-      maxValue,
-      minValueForInsideLabel: maxValue * 0.1,
-    };
-  }, [data]);
-
   if (!data.length) {
     return <EmptyState message="No chart data available" />;
   }
-
-  const { minValueForInsideLabel } = chartMetrics;
-
   return (
-    <div className="w-full overflow-hidden">
+    <div className="w-full h-full">
       <ResponsiveContainer width="100%" height="100%">
         <ChartContainer
           config={CHART_CONFIG}
-          className="h-full w-full max-h-[400px]"
+          className="h-full lg:h-[180px] w-full"
         >
           <BarChart
             accessibilityLayer
             data={data}
-            layout="vertical"
+            layout="horizontal"
             margin={CHART_MARGINS}
-            barGap={5}
-            barSize={16}
+            barGap={3}
           >
+            {/* Grid */}
             <CartesianGrid
-              vertical={false}
               stroke="var(--border)"
-              strokeOpacity={0.2}
+              strokeOpacity={0.15}
+              vertical={false}
             />
-            <YAxis
+            {/* X Axis (days) */}
+            <XAxis
               dataKey="day"
               type="category"
               axisLine={false}
@@ -195,49 +167,63 @@ const Chart: React.FC<{ data: ChartDataItem[] }> = ({ data }) => {
                 fill: "hsl(var(--muted-foreground))",
                 fontWeight: 500,
               }}
-              tickMargin={2}
-              width={40}
             />
-            <XAxis type="number" dataKey="totStock" hide />
+            {/* Hide Y axis (just values) */}
+            <YAxis type="number" hide />
+            {/* Tooltip */}
             <ChartTooltip
-              cursor={{ fill: "rgba(0, 0, 0, 0.03)" }}
+              cursor={{ fill: "rgba(0, 0, 0, 0.04)" }}
               content={<CustomTooltip />}
             />
+            {/* Sold Stock */}
             <Bar
               dataKey="soldStock"
               fill="var(--chart-1)"
               radius={[0, 0, 0, 0]}
               stackId="stack"
             >
+              {/* Sold values inside the bars */}
               <LabelList
-                dataKey="day"
-                position="insideLeft"
-                offset={2}
-                className="fill-white font-medium"
-                fontSize={fontSize}
-                style={{ textShadow: "0 1px 2px rgba(0,0,0,0.3)" }}
-                formatter={(value: string, entry: ChartDataItem) => {
-                  if (!entry || typeof entry.soldStock !== "number") return "";
-                  return entry.soldStock >= minValueForInsideLabel ? value : "";
+                dataKey="soldStock"
+                position="center"
+                className="font-semibold"
+                fontSize={10}
+                fill="var(--foreground)"
+                formatter={(value: number) => {
+                  if (!value || isNaN(value) || value <= 50) return ""; // hide if <= 50
+                  return Math.round(value);
                 }}
               />
             </Bar>
+            {/* Hold Stock */}
             <Bar
               dataKey="holdStock"
               fill="var(--chart-2)"
               radius={[0, 0, 0, 0]}
               stackId="stack"
             >
+              {/* Hold values inside the bars */}
+              <LabelList
+                dataKey="holdStock"
+                position="center"
+                className="font-semibold"
+                fontSize={10}
+                fill="var(--foreground)"
+                formatter={(value: number) => {
+                  if (!value || isNaN(value) || value <= 50) return ""; // hide if <= 50
+                  return Math.round(value);
+                }}
+              />
+              {/* Total values on top of bars */}
               <LabelList
                 dataKey="totStock"
-                position="right"
-                offset={2}
-                className="font-semibold fill-accent-foreground"
-                fontSize={fontSize}
-                fill="hsl(var(--foreground))"
+                position="top"
+                offset={4}
+                fill="var(--foreground)"
+                fontSize={10}
                 formatter={(value: number) => {
-                  if (typeof value !== "number") return "";
-                  return formatValue(value);
+                  if (!value || isNaN(value)) return "";
+                  return Math.round(value).toLocaleString();
                 }}
               />
             </Bar>
@@ -247,7 +233,6 @@ const Chart: React.FC<{ data: ChartDataItem[] }> = ({ data }) => {
     </div>
   );
 };
-
 // Main component
 export const HoldSoldChartV2: React.FC<HoldSoldChartProps> = ({
   totalHeld,
@@ -264,7 +249,6 @@ export const HoldSoldChartV2: React.FC<HoldSoldChartProps> = ({
         typeof item.holdStock === "number",
     );
   }, [chartData]);
-
   const sanitizedTotals = useMemo(
     () => ({
       hold: {
@@ -276,100 +260,75 @@ export const HoldSoldChartV2: React.FC<HoldSoldChartProps> = ({
     }),
     [totalHeld, totalSold],
   );
-
   // Empty state
   if (!chartData || sanitizedData.length === 0) {
     return (
-      <div className="lg:h-50">
-        <Card className="h-full w-full p-1.5 gap-1.5">
-          <CardHeader className="p-2">
-            <div className="flex flex-wrap items-center justify-between gap-1">
-              <div className="flex flex-wrap items-center gap-1.5 min-w-0 max-w-[70%]">
-                <div className="min-w-0 w-full flex flex-col gap-1">
-                  <CardTitle className="text-lg sm:text-sm font-medium text-foreground truncate flex items-center gap-2">
-                    <Package className="h-4 w-4 text-primary" />
-                    Hold/Sold Data
-                  </CardTitle>
-                </div>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent className="flex-1 flex items-center justify-center p-4">
-            <EmptyState message="No data available" />
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  return (
-    <div className="w-full h-full">
-      <Card className="h-full w-full p-1.5 gap-1.5">
-        <CardHeader className="p-2">
-          <div className="flex flex-wrap items-center justify-between gap-1">
-            <div className="flex flex-wrap items-center gap-1.5 min-w-0 max-w-[70%]">
-              <div className="min-w-0 w-full flex flex-col gap-1">
-                <CardTitle className="text-lg sm:text-sm font-medium text-foreground truncate flex items-center gap-2">
-                  <TrendingUp className="h-4 w-4 text-primary" />
-                  Hold/sold Data
-                </CardTitle>
-              </div>
-            </div>
+      <Card className="h-full w-full flex flex-col">
+        <CardHeader className="p-2 pb-0">
+          <div className="flex items-center gap-2">
+            <Package className="h-4 w-4 text-primary" />
+            <CardTitle className="text-sm font-medium">
+              Hold/Sold Data
+            </CardTitle>
           </div>
         </CardHeader>
-
-        <CardContent className="space-y-1.5 p-0">
-          {/* Stock Summary & Chart - Side by side */}
-          <div className="flex flex-col gap-1.5">
-            {/* Stock Summary Cards - Takes 2 columns */}
-            <div className="flex flex-row md:flex-col lg:flex-row gap-1.5">
-              {/* Sold Stock Card */}
-              <div className="w-full space-y-2 border border-border rounded-lg px-2 py-2">
-                <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide flex items-center gap-1">
-                  <div className="w-2 h-2 rounded-full bg-chart-1" />
-                  Sold Stock
-                </div>
-                <div className="space-y-0.5">
-                  <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">
-                    Quantity
-                  </div>
-                  <div className="text-base lg:text-lg font-bold text-foreground">
-                    {formatValue(sanitizedTotals.sold.soldQuantity)}
-                    <span className="text-xs font-bold ml-1">K</span>
-                    <span className="text-[10px] ml-1 text-muted-foreground">
-                      sq.ft
-                    </span>
-                  </div>
-                </div>
-              </div>
-              {/* Hold Stock Card */}
-              <div className="w-full space-y-2 border border-border rounded-lg px-2 py-2">
-                <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide flex items-center gap-1">
-                  <div className="w-2 h-2 rounded-full bg-chart-2" />
-                  Hold Stock
-                </div>
-                <div className="space-y-0.5">
-                  <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">
-                    Quantity
-                  </div>
-                  <div className="text-base lg:text-lg font-bold text-foreground">
-                    {formatValue(sanitizedTotals.hold.holdQuantity)}
-                    <span className="text-xs font-bold ml-1">K</span>
-                    <span className="text-[10px] ml-1 text-muted-foreground">
-                      sq.ft
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Chart Section */}
-            <div className="w-full overflow-hidden">
-              <Chart data={sanitizedData} />
-            </div>
-          </div>
+        <CardContent className="flex-1 flex items-center justify-center p-4">
+          <EmptyState message="No data available" />
         </CardContent>
       </Card>
-    </div>
+    );
+  }
+  return (
+    <Card className="p-0 gap-0 h-full w-full flex flex-col">
+      <div className="pt-3 px-4 pb-0 text-sm text-foreground flex flex-col items-start gap-0.5">
+        <h1 className="flex items-center gap-0.5">
+          <TrendingUp className="h-4 w-4 text-primary" />
+          Hold / Sold Data
+        </h1>
+        <p className="text-[10px] text-red-700 font-medium">
+          *Stocks data are hidden if{" "}
+          <span className="font-semibold">Total Stock ≤ 50</span>. See tooltip
+          for details.
+        </p>
+      </div>
+      <CardContent className="flex-1 flex flex-col p-1.5 space-y-2">
+        <div className="flex flex-row gap-1">
+          <div className="flex-1 border border-border rounded-lg px-1.5 py-1.5">
+            <div className="text-[10px] font-semibold text-foreground uppercase tracking-wide text-left flex items-center gap-1.5">
+              <div className="w-2 h-2 rounded-full bg-chart-1 flex-shrink-0" />
+              Sold Stock
+            </div>
+            <div className="space-y-0.5">
+              <div className="text-[9px] font-medium text-muted-foreground uppercase tracking-wide text-left">
+                Quantity{" "}
+                <span className="font-semibold text-foreground">(sq.ft.)</span>
+              </div>
+              <div className="text-sm font-bold text-primary text-left">
+                {formatValue(sanitizedTotals.sold.soldQuantity)}K
+              </div>
+            </div>
+          </div>
+          <div className="flex-1 border border-border rounded-lg px-1.5 py-1.5">
+            <div className="text-[10px] font-semibold text-foreground uppercase tracking-wide text-left flex items-center gap-1.5">
+              <div className="w-2 h-2 rounded-full bg-chart-2 flex-shrink-0" />
+              Hold Stock
+            </div>
+            <div className="space-y-0.5">
+              <div className="text-[9px] font-medium text-muted-foreground uppercase tracking-wide text-left">
+                Quantity{" "}
+                <span className="font-semibold text-foreground">(sq.ft.)</span>
+              </div>
+              <div className="text-sm font-bold text-primary text-left">
+                {formatValue(sanitizedTotals.hold.holdQuantity)}K
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* Chart - takes remaining space */}
+        <div className="flex-1 min-h-0">
+          <Chart data={sanitizedData} />
+        </div>
+      </CardContent>
+    </Card>
   );
 };
