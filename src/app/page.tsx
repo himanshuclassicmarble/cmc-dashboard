@@ -6,7 +6,7 @@ import Link from "next/link";
 const apps = [
   {
     name: "Dashboard",
-    href: "/dashboard",
+    href: "/card-test-v5",
     icon: (
       <svg
         className="h-12 w-12"
@@ -21,7 +21,7 @@ const apps = [
   },
   {
     name: "Reports",
-    href: "/reports",
+    href: "/crm-route",
     icon: (
       <svg
         className="h-12 w-12"
@@ -35,8 +35,8 @@ const apps = [
     ),
   },
   {
-    name: "Settings",
-    href: "/settings",
+    name: "Application Image",
+    href: "/appln",
     icon: (
       <svg
         className="h-12 w-12"
