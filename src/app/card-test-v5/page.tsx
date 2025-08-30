@@ -82,11 +82,14 @@ const CardTestV7: React.FC = () => {
   );
 
   return (
-    <div className="h-auto w-full flex flex-col">
-      <header>
+    <div className="h-screen w-full flex flex-col overflow-hidden">
+      {/* Give header a fixed height */}
+      <header className="h-14 flex-shrink-0">
         <FilterHeader />
       </header>
-      <main className="flex-1 w-full max-w-7xl mx-auto flex flex-col p-2 gap-2 overflow-hidden">
+
+      {/* Main now fills exactly remaining height = 100vh - 56px */}
+      <main className="flex-1 w-full max-w-7xl mx-auto flex flex-col p-2 gap-2 overflow-hidden h-[calc(100vh-3.5rem)]">
         <LargeScreenLayout />
         <MediumScreenLayout />
         <SmallScreenLayout />

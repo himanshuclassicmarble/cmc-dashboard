@@ -121,7 +121,7 @@ export const PerformanceCard: React.FC<PerformanceCardProps> = ({ data }) => {
       <div className="border-t border-border pt-1.5">
         <div className="grid grid-cols-2 gap-1.5">
           <div className="space-y-1">
-            <div className="text-[9px] xs:text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wide">
+            <div className="text-[9px] landscape:text-[10px] xs:text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wide">
               Budget Target
             </div>
             <div className="text-xs sm:text-sm font-medium text-foreground">
@@ -134,7 +134,7 @@ export const PerformanceCard: React.FC<PerformanceCardProps> = ({ data }) => {
             </div>
           </div>
           <div className="space-y-1">
-            <div className="text-[9px] xs:text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wide">
+            <div className="text-[9px] landscape:text-[10px] xs:text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wide">
               Achievement
             </div>
             <div
@@ -162,7 +162,7 @@ export const PerformanceCard: React.FC<PerformanceCardProps> = ({ data }) => {
       </div>
 
       {/* Desktop Version */}
-      <div className="hidden md:block">
+      <div className="hidden md:block h-full">
         <Card className="h-full w-full p-1.5 gap-1.5">
           <CardHeader className="p-2">
             <div className="flex flex-wrap items-center justify-between gap-1">
@@ -172,7 +172,7 @@ export const PerformanceCard: React.FC<PerformanceCardProps> = ({ data }) => {
                     {data.title}
                   </CardTitle>
                   <span className="text-[10px] text-muted-foreground">
-                    {data.subtitle}
+                    {data.subtitle ? data.subtitle : "\u00A0"}
                   </span>
                 </div>
               </div>
@@ -199,10 +199,10 @@ export const PerformanceCard: React.FC<PerformanceCardProps> = ({ data }) => {
             {/* Current Year & Previous Year - Side by side */}
             <div className="grid grid-cols-2 gap-1.5">
               <div className="space-y-1 border border-border rounded-lg px-2 py-2">
-                <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                <div className="text-xs landscape:text-[10px] font-medium text-muted-foreground uppercase tracking-wide">
                   Current Year
                 </div>
-                <div className="text-base lg:text-lg font-bold text-foreground">
+                <div className="text-base font-bold text-foreground">
                   {formatValue(data.metrics.cy)}
                   {data.unit && (
                     <span className="text-xs font-medium text-muted-foreground ml-1">
@@ -212,10 +212,10 @@ export const PerformanceCard: React.FC<PerformanceCardProps> = ({ data }) => {
                 </div>
               </div>
               <div className="space-y-1 border border-border rounded-lg px-2 py-2">
-                <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                <div className="text-xs landscape:text-[10px] font-medium text-muted-foreground uppercase tracking-wide">
                   Previous Year
                 </div>
-                <div className="text-base lg:text-lg font-bold text-foreground">
+                <div className="text-base  font-bold text-foreground">
                   {formatValue(data.metrics.py)}
                   {data.unit && (
                     <span className="text-xs font-medium text-muted-foreground ml-1">
@@ -227,7 +227,7 @@ export const PerformanceCard: React.FC<PerformanceCardProps> = ({ data }) => {
             </div>
 
             {/* Budget & Achievement Content */}
-            <div className="px-2">{budgetAchievementContent}</div>
+            <div className="p-1">{budgetAchievementContent}</div>
           </CardContent>
         </Card>
       </div>

@@ -41,7 +41,7 @@ const CrmChart: React.FC<CrmDataProps> = ({ chartData }) => {
           data={validatedData}
           layout="vertical"
           barSize={20}
-          margin={{ top: 0, right: 20, bottom: 0, left: 0 }}
+          margin={{ top: 0, right: 20, bottom: 0, left: 15 }}
         >
           <CartesianGrid horizontal={false} />
           <YAxis

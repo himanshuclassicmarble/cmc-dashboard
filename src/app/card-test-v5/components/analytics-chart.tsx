@@ -1,7 +1,20 @@
 "use client";
 
-import { Bar, Line, ComposedChart, CartesianGrid, XAxis, YAxis, LabelList, ResponsiveContainer } from "recharts";
-import { ChartContainer, ChartTooltip, ChartConfig } from "@/components/ui/chart";
+import {
+  Bar,
+  Line,
+  ComposedChart,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  LabelList,
+  ResponsiveContainer,
+} from "recharts";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartConfig,
+} from "@/components/ui/chart";
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState, useEffect, useMemo, useCallback } from "react";
@@ -59,7 +72,7 @@ const CHART_CONFIG: ChartConfig = {
     color: "var(--chart-1)",
   },
   previousYear: {
-    label: "Previous Year", 
+    label: "Previous Year",
     color: "var(--chart-2)",
   },
   target: {
@@ -78,13 +91,16 @@ const CHART_MARGINS = {
 // ===================== UTILITIES =====================
 
 // function for the formatting the dat aof the chart
-const formatValue = (value: number, metric: "value" | "quantity" = "value"): string => {
+const formatValue = (
+  value: number,
+  metric: "value" | "quantity" = "value",
+): string => {
   const decimals = metric === "quantity" ? 1 : 2;
-  
+
   // checks if decimal is present if true then add decimal or no decimal
   const hasDecimals = value % 1 !== 0;
   const finalDecimals = hasDecimals ? decimals : 0;
-  
+
   return value.toLocaleString("en-IN", {
     minimumFractionDigits: finalDecimals,
     maximumFractionDigits: decimals,
@@ -93,40 +109,45 @@ const formatValue = (value: number, metric: "value" | "quantity" = "value"): str
 
 // Screensize manipulation for the Slider to work properly.
 const getScreenSize = (width: number) => {
-  if (width < SCREEN_BREAKPOINTS.MOBILE) return 'mobile';
-  if (width < SCREEN_BREAKPOINTS.TABLET) return 'tablet';
-  return 'desktop';
+  if (width < SCREEN_BREAKPOINTS.MOBILE) return "mobile";
+  if (width < SCREEN_BREAKPOINTS.TABLET) return "tablet";
+  return "desktop";
 };
 
 // font size change in the chart
 const getFontSize = (screenSize: string) => {
   switch (screenSize) {
-    case 'mobile': return 8;
-    case 'tablet': return 9;
-    default: return 10;
+    case "mobile":
+      return 8;
+    case "tablet":
+      return 9;
+    default:
+      return 10;
   }
 };
-
 
 // how many data to visible at a time on a tab or phone
 const getVisibleDataCount = (screenSize: string) => {
   switch (screenSize) {
-    case 'mobile': return 4;
-    case 'tablet': return 6;
-    default: return Infinity;
+    case "mobile":
+      return 4;
+    case "tablet":
+      return 6;
+    default:
+      return Infinity;
   }
 };
 
 // ===================== HOOKS =====================
-// screensize checker 
+// screensize checker
 const useScreenSize = () => {
-  const [screenSize, setScreenSize] = useState('desktop');
+  const [screenSize, setScreenSize] = useState("desktop");
 
   const updateScreenSize = useCallback(() => {
     if (typeof window === "undefined") return;
     setScreenSize(getScreenSize(window.innerWidth));
   }, []);
-// component updater according to the size of the device
+  // component updater according to the size of the device
   useEffect(() => {
     updateScreenSize();
     window.addEventListener("resize", updateScreenSize);
@@ -137,32 +158,41 @@ const useScreenSize = () => {
 };
 
 const useDataTransform = (data: AnalyticsDataPoint[]) => {
-  return useCallback((metric: "value" | "quantity"): ChartDataPoint[] => {
-    if (!Array.isArray(data) || data.length === 0) return [];
+  return useCallback(
+    (metric: "value" | "quantity"): ChartDataPoint[] => {
+      if (!Array.isArray(data) || data.length === 0) return [];
 
-    return data
-      .filter(item => 
-        item?.month &&
-        item?.currentYear &&
-        item?.previousYear &&
-        item?.target &&
-        typeof item.currentYear === "object" &&
-        typeof item.previousYear === "object" &&
-        typeof item.target === "object"
-      )
-      .map((item, index) => ({
-        month: item.month,
-        currentYear: Number(item.currentYear[metric]) || 0,
-        previousYear: Number(item.previousYear[metric]) || 0,
-        target: Number(item.target[metric]) || 0,
-        id: `${item.month}-${metric}-${index}`,
-      }));
-  }, [data]);
+      return data
+        .filter(
+          (item) =>
+            item?.month &&
+            item?.currentYear &&
+            item?.previousYear &&
+            item?.target &&
+            typeof item.currentYear === "object" &&
+            typeof item.previousYear === "object" &&
+            typeof item.target === "object",
+        )
+        .map((item, index) => ({
+          month: item.month,
+          currentYear: Number(item.currentYear[metric]) || 0,
+          previousYear: Number(item.previousYear[metric]) || 0,
+          target: Number(item.target[metric]) || 0,
+          id: `${item.month}-${metric}-${index}`,
+        }));
+    },
+    [data],
+  );
 };
 
 // ===================== COMPONENTS =====================
 
-const CustomTooltip = ({ active, payload, label, metric = "value" }: CustomTooltipProps) => {
+const CustomTooltip = ({
+  active,
+  payload,
+  label,
+  metric = "value",
+}: CustomTooltipProps) => {
   if (!active || !payload?.length) return null;
 
   return (
@@ -174,21 +204,26 @@ const CustomTooltip = ({ active, payload, label, metric = "value" }: CustomToolt
         </div>
         {payload.map((entry, index) => {
           const value = entry.value ?? 0;
-          const dataKey = entry.dataKey ?? entry.name ?? '';
-          const color = entry.color ?? '';
-          
+          const dataKey = entry.dataKey ?? entry.name ?? "";
+          const color = entry.color ?? "";
+
           return (
-            <div key={`tooltip-${dataKey}-${index}`} className="flex justify-between items-center gap-1">
+            <div
+              key={`tooltip-${dataKey}-${index}`}
+              className="flex justify-between items-center gap-1"
+            >
               <div className="flex items-center gap-1.5">
                 <div
                   className={cn(
-                    "w-2.5 h-2.5", 
-                    dataKey === "target" ? "rounded-full" : "rounded-sm"
+                    "w-2.5 h-2.5",
+                    dataKey === "target" ? "rounded-full" : "rounded-sm",
                   )}
                   style={{ backgroundColor: color }}
                 />
                 <span className="text-[10px] text-muted-foreground">
-                  {CHART_CONFIG[dataKey as keyof typeof CHART_CONFIG]?.label || dataKey}:
+                  {CHART_CONFIG[dataKey as keyof typeof CHART_CONFIG]?.label ||
+                    dataKey}
+                  :
                 </span>
               </div>
               <span className="text-[10px] font-semibold tabular-nums">
@@ -208,17 +243,27 @@ const ChartLegend = () => (
       <div key={key} className="flex items-center gap-2">
         <div
           className={cn(
-            key === "target" ? "w-3 h-1.5 rounded-full" : "w-3 h-3 rounded-sm"
+            key === "target" ? "w-3 h-1.5 rounded-full" : "w-3 h-3 rounded-sm",
           )}
           style={{ backgroundColor: color }}
         />
-        <span className="text-sm font-medium text-muted-foreground">{label}</span>
+        <span className="text-sm font-medium text-muted-foreground">
+          {label}
+        </span>
       </div>
     ))}
   </div>
 );
 
-const Chart = ({ data, screenSize, metric }: { data: ChartDataPoint[]; screenSize: string; metric: "value" | "quantity" }) => {
+const Chart = ({
+  data,
+  screenSize,
+  metric,
+}: {
+  data: ChartDataPoint[];
+  screenSize: string;
+  metric: "value" | "quantity";
+}) => {
   const fontSize = getFontSize(screenSize);
 
   if (!data?.length) {
@@ -240,11 +285,11 @@ const Chart = ({ data, screenSize, metric }: { data: ChartDataPoint[]; screenSiz
           barCategoryGap="5%"
           barGap={2}
         >
-          <CartesianGrid 
-            strokeDasharray="3 3" 
-            vertical={false} 
-            stroke="hsl(var(--border))" 
-            strokeOpacity={0.3} 
+          <CartesianGrid
+            strokeDasharray="3 3"
+            vertical={false}
+            stroke="hsl(var(--border))"
+            strokeOpacity={0.3}
           />
 
           <XAxis
@@ -271,9 +316,9 @@ const Chart = ({ data, screenSize, metric }: { data: ChartDataPoint[]; screenSiz
             tickFormatter={formatValueForMetric}
           />
 
-          <ChartTooltip 
-            cursor={{ fill: "hsl(var(--muted)/20)" }} 
-            content={<CustomTooltip metric={metric} />} 
+          <ChartTooltip
+            cursor={{ fill: "hsl(var(--muted)/20)" }}
+            content={<CustomTooltip metric={metric} />}
           />
 
           <Bar
@@ -342,13 +387,13 @@ const Chart = ({ data, screenSize, metric }: { data: ChartDataPoint[]; screenSiz
   );
 };
 
-const ScrollControl = ({ 
-  scrollPosition, 
-  onScrollChange, 
-  maxScroll, 
-  visibleData, 
-  visibleDataCount, 
-  totalDataLength 
+const ScrollControl = ({
+  scrollPosition,
+  onScrollChange,
+  maxScroll,
+  visibleData,
+  visibleDataCount,
+  totalDataLength,
 }: {
   scrollPosition: number;
   onScrollChange: (value: number[]) => void;
@@ -390,19 +435,25 @@ const ErrorState = ({ message }: { message: string }) => (
 export default function AnalyticsChart({ data }: AnalyticsChartProps) {
   const [scrollPosition, setScrollPosition] = useState(0);
   const [activeTab, setActiveTab] = useState<"value" | "quantity">("value");
-  
+
   const screenSize = useScreenSize();
   const transformData = useDataTransform(data);
 
   // Memoized calculations
-  const visibleDataCount = useMemo(() => getVisibleDataCount(screenSize), [screenSize]);
-  const needsScrolling = screenSize !== 'desktop';
+  const visibleDataCount = useMemo(
+    () => getVisibleDataCount(screenSize),
+    [screenSize],
+  );
+  const needsScrolling = screenSize !== "desktop";
   const maxScroll = Math.max(0, (data?.length || 0) - visibleDataCount);
 
-  const currentData = useMemo(() => transformData(activeTab), [transformData, activeTab]);
-  
+  const currentData = useMemo(
+    () => transformData(activeTab),
+    [transformData, activeTab],
+  );
+
   const visibleData = useMemo(() => {
-    return needsScrolling 
+    return needsScrolling
       ? currentData.slice(scrollPosition, scrollPosition + visibleDataCount)
       : currentData;
   }, [currentData, needsScrolling, scrollPosition, visibleDataCount]);
@@ -458,7 +509,11 @@ export default function AnalyticsChart({ data }: AnalyticsChartProps) {
           </TabsContent>
 
           <TabsContent value="quantity" className="mt-0">
-            <Chart data={visibleData} screenSize={screenSize} metric="quantity" />
+            <Chart
+              data={visibleData}
+              screenSize={screenSize}
+              metric="quantity"
+            />
           </TabsContent>
         </Tabs>
 
